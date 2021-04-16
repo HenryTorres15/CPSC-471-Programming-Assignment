@@ -3,14 +3,14 @@ import sys
 import os
 import time
 
-# 10 byte header size
-header = 10
 #server folder
 servFolder = "./servData/"
 #client folder
 cliFolder = "./cliData/"
 #list of commands for terminal
 commands = ["get", "put", "ls", "quit"]
+# 10 byte header size
+header = 10
 
 # keeps getting data until all of the bytes have been received
 def getData(sock, size):
@@ -33,7 +33,7 @@ def getServData(sock, file):
     # receive the size of the file and convert to decimal
     acceptSize = sock.recv(40)
     acceptSize = acceptSize.decode()
-    aceeptSize = int(acceptSize)
+    acceptSize = int(acceptSize)
 
     # make a temp. variable to hold the incoming data
     temp = ""
@@ -69,8 +69,8 @@ def sendServData(sock):
     info = data.read()
 
     # save the size of the content and send it
-    acceptSize = str(len(content)).encode()
-    sock.send(getSize)
+    acceptLen = str(len(info)).encode()
+    sock.send(acceptLen)
     
     # loops repeatedly until everything is sent
     while(True):
