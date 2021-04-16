@@ -1,14 +1,15 @@
-import socket, sys, os, time
+import os, sys, socket
 from dataLink import getData, sendData, sendServData, dataSize
 
-# 10 byte header size
-header = 10
+
 #server folder
 servFolder = "./servData/"
 #client folder
 cliFolder = "./cliData/"
 #list of commands for terminal
 commands = ["get", "put", "ls", "quit"]
+# 10 byte header size
+header = 10
 
 # bind function 
 def bind(port = 0):
@@ -33,8 +34,7 @@ def getFile(sock):
 
     # print an acception message
     print("Listening on specific port: " + str(servPort))
-    sockData = newSock.accept()
-    loc = newSock.accept()
+    sockData, loc = newSock.accept()
     print("Actively connected to: " + loc[0])
 
     # get the sizes of the file message and file size
@@ -51,8 +51,8 @@ def getFile(sock):
         return
 
     # create variables and retreieve size
-    name = getData(dataSocket, int(fileMessSize))
-    data = getData(dataSocket, int(fileSize))
+    name = getData(sockData, int(fileMessSize))
+    data = getData(sockData, int(fileSize))
 
     # create a path
     path = servFolder + name
@@ -88,8 +88,7 @@ def main(argu):
     # keeps listening until user terminates the program
     while (True):
         print("Actively listening to " + port)
-        cliSock = servSock.accept()
-        loc = servSock.accept()
+        cliSock, loc = servSock.accept()
         print("Actively connected to " + loc[0])
 
         # loops for terminal commands on ftp
