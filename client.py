@@ -1,14 +1,14 @@
-import socket, sys, os, time
+import os, sys, socket
 from dataLink import getData, sendData, getServData, dataSize
 
-# 10 byte header size
-header = 10
 #server folder
 servFolder = "./servData/"
 #client folder
 cliFolder = "./cliData/"
 #list of commands for terminal
 commands = ["get", "put", "ls", "quit"]
+# 10 byte header size
+header = 10
 
 #Connect to the port in the header
 def connect(address, port):
