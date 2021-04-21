@@ -15,9 +15,9 @@ Python 3.9 or higher
 3. Run the server.py program in terminal, "py server.py **PORT**". Example: "py server.py 12000"
 4. Open a 2nd terminal and run the client.py program, "py client.py **SERVER-MACHINE** **PORT**". Example: "py client.py 127.0.0.1 12000"
 5. From there you will have a list of commands for the client.py
-    -ftp> get **FILE NAME**  (downloads file **FILE NAME** from the server)
-    -ftp> put **FILE NAME**  (uploads file **FILE NAME** to the server)
-    -ftp> ls                 (lists files on the server)
-    -ftp> quit               (disconnects from the server and exits)
+    - ftp> get **FILE NAME**  (downloads file **FILE NAME** from the server)
+    - ftp> put **FILE NAME**  (uploads file **FILE NAME** to the server)
+    - ftp> ls                 (lists files on the server)
+    - ftp> quit               (disconnects from the server and exits)
 ## Extra notes:
 The cliData folder is where all the client files are stored and read. While, the servData folder is where all the server files are stored and read. We also added 3 testing files already included in the servData but you can create new files and test it out for yourself. 
