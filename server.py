@@ -24,6 +24,7 @@ def bind(port = 0):
     # return the server socket 
     return servSock
 
+# server side get file
 def getFile(sock):
     # make a new sock with respect to bind()
     newSock = bind()
@@ -63,7 +64,7 @@ def getFile(sock):
 
     # printing a message if the file and file size has been received
     print(name + " has been received!")
-    print("The size of the file is: " + fileSize)
+    print("The transferred size is : " + fileSize + " bytes.")
 
     # close the file
     user.close()
@@ -122,7 +123,7 @@ def main(argu):
             # closes the connection by typing quit in terminal
             elif (ask == commands[3]):
                 cliSock.close()
-                print("The connection is now closing.")
+                print("The server connection is now closing.")
                 break
             # otherwise is closes the connection
             else:

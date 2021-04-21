@@ -1,24 +1,24 @@
 import socket
 
-#Connect to the port in the header
+# connect the port and header
 def connect(address, port):
     try:
-        serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serverSocket.connect((address, port))
+        servSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        servSock.connect((address, port))
         print("Connected to " + address + " on port " + str(port))
-    except Exception as e:
-        print(e)
+    except Exception as exc:
+        print(exc)
         return None
-    return serverSocket
+    return servSock
 
 
-#Bind the port, listen for incoming connections
+# bind the port
 def bind(port = 0):
     try:
-        serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serverSocket.bind(('', port))
-        serverSocket.listen(1)
-    except Exception as e:
-        print(e)
+        servSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        servSock.bind(('', port))
+        servSock.listen(1)
+    except Exception as exc:
+        print(exc)
         return None
-    return serverSocket
+    return servSock

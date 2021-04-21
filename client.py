@@ -1,134 +1,136 @@
 import os, sys, socket
 from dataLink import getData, sendData, getServData, dataSize
 
-#server folder
+# server folder
 servFolder = "./servData/"
-#client folder
+# client folder
 cliFolder = "./cliData/"
-#list of commands for terminal
+# list of commands for terminal
 commands = ["get", "put", "ls", "quit"]
 # 10 byte header size
 header = 10
 
-#Connect to the port in the header
-def connect(address, port):
+# connect the port and header
+def connect(loc, port):
     try:
-        serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serverSocket.connect((address, port))
-        print("Connected to " + address + " on port " + str(port))
-    except Exception as e:
-        print(e)
+        servSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        servSock.connect((loc, port))
+        print("Actively connected to " + loc + " and is on port " + str(port))
+    except Exception as exc:
+        print(exc)
         return None
-    return serverSocket
+    return servSock
 
-def put_file(sock, address, fileName):
-    # grab files only from client folder
-    filePath = cliFolder + fileName
+# client side put file
+def putFile(sock, loc, fileName):
+    # create variable for files in client folder
+    path = cliFolder + fileName
 
-    # open file and get file size
+    # retrieve the size and open the file
     try:
-        userFile = open(filePath, "r")
-        fileSize = os.path.getsize(filePath)
-    except Exception as e:
-        print(e)
-        # print("Failed to open file")
+        user = open(path, "r")
+        fileLength = os.path.getsize(path)
+    except Exception as exc:
+        print(exc)
         return
 
-    # get data channel port number from server
-    dataPort = getData(sock, header)
+    # port number from server
+    channelPort = getData(sock, header)
 
-    # connect to new port
-    dataSocket = connect(address, int(dataPort))
+    # create a new connection to a new port
+    dataSock = connect(loc, int(channelPort))
 
-    # if connection failed, exit
-    if not dataSocket:
-        print("Failed to connect to server")
+    # error message for a failed connection
+    if (not dataSock):
+        print("Error, the connection to server has failed.")
         return
     
-    # make file size and file name headers
-    fileNameSize = dataSize(len(fileName), header)
-    fileDataSize = dataSize(fileSize, header)
-    fileData = userFile.read()
+    # the size of the fileName
+    nameSize = dataSize(len(fileName), header)
+    # the size of the file
+    file_dataSize = dataSize(fileLength, header)
+    # read what's inside the file
+    fileData = user.read()
     
-    # add headers to payload
-    data = fileNameSize + fileDataSize + fileName + fileData
+    # create a payload
+    data = nameSize + file_dataSize + fileName + fileData
 
-    # send data
-    sendData(dataSocket, data)
-    print(fileName + " upload successful.")
-    print("Bytes sent: " + str(len(data)))
+    # send data from socket and print messages that it was recieved.
+    sendData(dataSock, data)
+    print(fileName + " file has been uploaded successfully.")
+    print("The uploaded size is " + str(len(data)) + " bytes.")
 
-    # close file and connection
-    userFile.close()
-    dataSocket.close()
-    print("Data transfer connection closed")
+    # close file
+    user.close()
+    # close connection
+    dataSock.close()
+    print("The data transfer connection has been closed.")
 
 
-def run(args):
-    # To run: python3 cli.py <SERVER> <PORT>
-    if len(args) != 3:
-        print("Usage: python3 " + args[0] + " <SERVER> <PORT>")
+def main(argu):
+    # make sure user writes the correct command for client.py
+    if (len(argu) != 3):
+        print("Please use python3 " + argu[0] + " <SERVER> <PORT>")
         sys.exit()
 
-    server = args[1]
-    port = args[2]
+    server = argu[1]
+    port = argu[2]
 
-    # connect to server
+    # trying to connect to server
     cliSocket = connect(server, int(port))
-    if not cliSocket:
-        print("Failed to connect to " + server)
+    if (not cliSocket):
+        # print a messgae if it does not connect
+        print("Error, failed to connect to " + server)
         sys.exit()
 
-    query = ""
-
+    ask = ""
+    
+    # stays on until the user decides to terminate or quit
     while True:
-        query = (input("ftp> ")).lower().split()
-        # print(query)
+        ask = (input("ftp> ")).lower().split()
 
-        # get <FILE NAME>
-        # downloads <FILE NAME> from the server
-        if query[0] == commands[0]:
-            if len(query) != 2:
-                print("Usage: get <FILE NAME>")
+        # get <FILE NAME> which downloads the file from the server
+        if (ask[0] == commands[0]):
+            if (len(ask) != 2):
+                print("Please use: get <FILE NAME> (downloads file from the server)")
             else:
-                sendData(cliSocket, query[0])
-                getServData(cliSocket, query[1])
+                sendData(cliSocket, ask[0])
+                getServData(cliSocket, ask[1])
             
-        # put <FILE NAME>
-        # uploads <FILE NAME> to the server
-        elif query[0] == commands[1]:
-            if len(query) != 2:
-                print("Usage: put <FILE NAME>")
+        # put <FILE NAME> which upoads the file from the server
+        elif (ask[0] == commands[1]):
+            if (len(ask) != 2):
+                print("Please use: put <FILE NAME> (uploads file to the server)")
             else:
-                sendData(cliSocket, query[0])
-                put_file(cliSocket, server, query[1])
+                sendData(cliSocket, ask[0])
+                putFile(cliSocket, server, ask[1])
             
-        # ls
-        # lists files on the server
-        elif query[0] == commands[2]:
-            # send query
-            sendData(cliSocket, query[0])
+        # ls - returns a list of all the files in the given directory
+        elif (ask[0] == commands[2]):
+            # send data from socket
+            sendData(cliSocket, ask[0])
 
-            # get size of response
-            responseSize = getData(cliSocket, header)
+            # variable for the size of repsonse
+            respSize = getData(cliSocket, header)
 
-            if responseSize == "":
-                print("Failed to receive size of response")
+            if (respSize == ""):
+                print("Error, the size of the response was not received.")
             else:
-                response = getData(cliSocket, int(responseSize))
+                response = getData(cliSocket, int(respSize))
                 print(response)
 
-        # quit
-        # disconnects from the server and exits
-        elif query[0] == commands[3]:
-            sendData(cliSocket, query[0])
+        # quit - disconnects from the server and exits
+        elif (ask[0] == commands[3]):
+            sendData(cliSocket, ask[0])
             cliSocket.close()
-            print("Connection closed")
+            print("The client connection is now closed.")
             break
         
         else:
-            print("Invalid command")
+            print("Command does not exist.")
+            # giving user examples for which commands to use
+            print("Please use one of the following: get <fileName>, put <fileName>, ls, quit")
 
 
 if __name__ == '__main__':
-    run(sys.argv)
+    main(sys.argv)

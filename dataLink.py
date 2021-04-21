@@ -42,7 +42,7 @@ def getServData(sock, file):
         temp += text.decode()
         if (len(temp) == acceptSize):
             sock.send("1".encode())
-            print("Sent True")
+            print("THE FILE HAS BEEN ACCEPTED!")
             break
 
     # open a file path
@@ -53,7 +53,7 @@ def getServData(sock, file):
 
     # print to notify the user file size and name
     print("The name of the file is: " + file)
-    print("The amount of bytes transferred are: " + str(acceptSize))
+    print("The size downloaded is: " + str(acceptSize) + " bytes")
 
     return 0
 
