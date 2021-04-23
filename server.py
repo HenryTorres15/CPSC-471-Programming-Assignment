@@ -1,4 +1,12 @@
-import os, sys, socket
+'''
+Henry Torres
+Armon Rahimi
+Jared Schneider
+Jonathan Story
+'''
+import os
+import sys
+import socket
 from dataLink import getData, sendData, sendServData, dataSize
 
 
@@ -75,7 +83,7 @@ def getFile(sock):
 def main(argu):
     # make sure the user writes the correct command on terminal to run server.py
     if (len(argu) != 2):
-        print("Please use python3 " + argu[0] + " <PORT>")
+        print("Please use py " + argu[0] + " <PORT>")
         sys.exit()
 
     port = argu[1]

@@ -1,4 +1,12 @@
-import os, sys, socket
+'''
+Henry Torres
+Armon Rahimi
+Jared Schneider
+Jonathan Story
+'''
+import os 
+import sys
+import socket
 from dataLink import getData, sendData, getServData, dataSize
 
 # server folder
@@ -70,7 +78,7 @@ def putFile(sock, loc, fileName):
 def main(argu):
     # make sure user writes the correct command for client.py
     if (len(argu) != 3):
-        print("Please use python3 " + argu[0] + " <SERVER> <PORT>")
+        print("Please use py " + argu[0] + " <SERVER> <PORT>")
         sys.exit()
 
     server = argu[1]

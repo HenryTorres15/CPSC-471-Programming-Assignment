@@ -1,3 +1,9 @@
+'''
+Henry Torres
+Armon Rahimi
+Jared Schneider
+Jonathan Story
+'''
 import socket
 
 # connect the port and header
